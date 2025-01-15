@@ -1,4 +1,4 @@
 @echo off
 
-python "C:.\windowsDNCfinderupdate.py"
+python "C:.\windowsDNCfinder.py"
 pause

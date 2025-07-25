@@ -46,7 +46,7 @@ def get_driver_version(driver_path):
 
 def download_edge_webdriver(version, download_path):
     url = f"https://msedgedriver.azureedge.net/{version}/edgedriver_win64.zip"
-    static_url = "https://msedgedriver.azureedge.net/138.0.3351.95/edgedriver_win64.zip
+    static_url = "https://msedgedriver.azureedge.net/138.0.3351.95/edgedriver_win64.zip"
     print(f"Downloading Edge WebDriver version {version} from {static_url}...")
     try:
         with requests.get(static_url, stream=True) as r:

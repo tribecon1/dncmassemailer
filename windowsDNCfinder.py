@@ -5,6 +5,8 @@ import urllib.request
 import zipfile
 import time
 import re
+import requests
+import shutil
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
@@ -45,8 +47,14 @@ def get_driver_version(driver_path):
 def download_edge_webdriver(version, download_path):
     url = f"https://msedgedriver.azureedge.net/{version}/edgedriver_win64.zip"
     print(f"Downloading Edge WebDriver version {version} from {url}...")
-    urllib.request.urlretrieve(url, download_path)
-    print("Download complete.")
+    try:
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with open(download_path, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        print("Download complete.")
+    except requests.RequestException as e:
+        print(f"Download failed: {e}")
 
 def extract_zip(zip_path, extract_to):
     print(f"Extracting {zip_path} to {extract_to}...")
@@ -60,6 +68,7 @@ webdriver_path = os.path.join(webdriver_dir, "msedgedriver.exe")
 
 # Check Edge version
 edge_version = get_edge_version()
+print(f"Here is the Windows Edge Browser version!: {edge_version}")
 if not edge_version:
     print("Unable to determine Microsoft Edge version. Exiting.")
     sys.exit(1)

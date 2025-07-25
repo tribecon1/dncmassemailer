@@ -46,9 +46,10 @@ def get_driver_version(driver_path):
 
 def download_edge_webdriver(version, download_path):
     url = f"https://msedgedriver.azureedge.net/{version}/edgedriver_win64.zip"
-    print(f"Downloading Edge WebDriver version {version} from {url}...")
+    static_url = "https://msedgedriver.microsoft.com/140.0.3456.0/edgedriver_win64.zip"
+    print(f"Downloading Edge WebDriver version {version} from {static_url}...")
     try:
-        with requests.get(url, stream=True) as r:
+        with requests.get(static_url, stream=True) as r:
             r.raise_for_status()
             with open(download_path, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)

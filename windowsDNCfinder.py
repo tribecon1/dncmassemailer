@@ -45,17 +45,39 @@ def get_driver_version(driver_path):
         return None
 
 def download_edge_webdriver(version, download_path):
-    url = f"https://msedgedriver.azureedge.net/{version}/edgedriver_win64.zip"
-    static_url = "https://msedgedriver.microsoft.com/138.0.3351.95/edgedriver_win64.zip"
-    print(f"Downloading Edge WebDriver version {version} from {static_url}...")
+    """
+    Download the closest matching Edge WebDriver version for the given Edge browser version.
+    """
+    import xml.etree.ElementTree as ET
+
+    # Extract just the major.minor.build (drop the patch number)
+    base_version = ".".join(version.split(".")[:3])
+    print(f"Detected Edge browser version: {version} (base {base_version})")
+
+    # Microsoft publishes an XML list of all driver builds
+    releases_url = "https://msedgedriver.azureedge.net/LATEST_RELEASE_" + base_version
+
     try:
-        with requests.get(static_url, stream=True) as r:
+        # Fetch the latest release for this base version
+        latest_release = requests.get(releases_url).text.strip()
+        print(f"Closest WebDriver version available: {latest_release}")
+
+        # Build the actual download URL
+        url = f"https://msedgedriver.azureedge.net/{latest_release}/edgedriver_win64.zip"
+        print(f"Downloading Edge WebDriver from {url}...")
+
+        with requests.get(url, stream=True) as r:
             r.raise_for_status()
             with open(download_path, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
+
         print("Download complete.")
+        return latest_release
+
     except requests.RequestException as e:
-        print(f"Download failed: {e}")
+        print(f"Failed to fetch WebDriver for {base_version}: {e}")
+        return None
+
 
 def extract_zip(zip_path, extract_to):
     print(f"Extracting {zip_path} to {extract_to}...")
@@ -268,3 +290,4 @@ mail.To = username_given
  
 # Display the email (this will open the Outlook email editor with the email populated)
 mail.Display(True)
+

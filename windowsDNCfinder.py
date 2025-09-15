@@ -72,7 +72,7 @@ def download_edge_webdriver(version, download_path):
                 shutil.copyfileobj(r.raw, f)
 
         print("Download complete.")
-        return latest_release
+        return
 
     except requests.RequestException as e:
         print(f"Failed to fetch WebDriver for {base_version}: {e}")
@@ -290,5 +290,6 @@ mail.To = username_given
  
 # Display the email (this will open the Outlook email editor with the email populated)
 mail.Display(True)
+
 
 

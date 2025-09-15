@@ -52,18 +52,18 @@ def download_edge_webdriver(version, download_path):
 
     # Extract just the major.minor.build (drop the patch number)
     base_version = ".".join(version.split(".")[:3])
-    print(f"Detected Edge browser version: {version} (base {base_version})")
+    print(f"Detected Edge browser version: {version} (base {base_version})") #140.0.3485.54
 
     # Microsoft publishes an XML list of all driver builds
-    releases_url = "https://msedgedriver.azureedge.net/LATEST_RELEASE_" + base_version
+    # releases_url = "https://msedgedriver.microsoft.com/140.0.3485.66/edgedriver_win64.zip"
 
     try:
         # Fetch the latest release for this base version
-        latest_release = requests.get(releases_url).text.strip()
-        print(f"Closest WebDriver version available: {latest_release}")
+        # latest_release = requests.get(releases_url).text.strip()
+        # print(f"Closest WebDriver version available: {latest_release}")
 
         # Build the actual download URL
-        url = f"https://msedgedriver.azureedge.net/{latest_release}/edgedriver_win64.zip"
+        url = f"https://msedgedriver.microsoft.com/140.0.3485.66/edgedriver_win64.zip"
         print(f"Downloading Edge WebDriver from {url}...")
 
         with requests.get(url, stream=True) as r:
@@ -290,4 +290,5 @@ mail.To = username_given
  
 # Display the email (this will open the Outlook email editor with the email populated)
 mail.Display(True)
+
 

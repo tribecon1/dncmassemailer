@@ -54,14 +54,7 @@ def download_edge_webdriver(version, download_path):
     base_version = ".".join(version.split(".")[:3])
     print(f"Detected Edge browser version: {version} (base {base_version})") #140.0.3485.54
 
-    # Microsoft publishes an XML list of all driver builds
-    # releases_url = "https://msedgedriver.microsoft.com/140.0.3485.66/edgedriver_win64.zip"
-
     try:
-        # Fetch the latest release for this base version
-        # latest_release = requests.get(releases_url).text.strip()
-        # print(f"Closest WebDriver version available: {latest_release}")
-
         # Build the actual download URL
         url = f"https://msedgedriver.microsoft.com/140.0.3485.66/edgedriver_win64.zip"
         print(f"Downloading Edge WebDriver from {url}...")
@@ -75,7 +68,8 @@ def download_edge_webdriver(version, download_path):
         return
 
     except requests.RequestException as e:
-        print(f"Failed to fetch WebDriver for {base_version}: {e}")
+        print(f"Failed to fetch WebDriver for {base_version}")
+        print("HOW TO FIX:\n1. Delete the edgedriver_win64 folder\n2. Go to this link: https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH and click the x64 option under the Stable Channel left panel\n3. Download and unzip the zip, and drag it into the dncmassemailer folder\n4. Run it again!")
         return None
 
 
@@ -86,7 +80,7 @@ def extract_zip(zip_path, extract_to):
     print("Extraction complete.")
 
 # Paths and variables
-webdriver_dir = os.path.join(os.getcwd(), "msedgedriver")
+webdriver_dir = os.path.join(os.getcwd(), "edgedriver_win64")
 webdriver_path = os.path.join(webdriver_dir, "msedgedriver.exe")
 
 # Check Edge version
@@ -99,15 +93,7 @@ if not edge_version:
 # Check if WebDriver exists and matches the Edge version
 if os.path.exists(webdriver_path):
     driver_version = get_driver_version(webdriver_path)
-    if driver_version == edge_version:
-        print(f"WebDriver version {driver_version} matches Edge version {edge_version}. Proceeding...")
-    else:
-        print(f"WebDriver version {driver_version} does not match Edge version {edge_version}.")
-        print("\nThe existing WebDriver directory must be deleted to download the correct version.")
-        print("Please manually delete the directory at the following path and rerun this script:")
-        print(f"{webdriver_dir}")
-        input("Press Enter to exit...")
-        sys.exit(1)
+    print("Driver found!")
 else:
     print("WebDriver not found. Proceeding with download and setup...")
 
@@ -290,6 +276,7 @@ mail.To = username_given
  
 # Display the email (this will open the Outlook email editor with the email populated)
 mail.Display(True)
+
 
 
 

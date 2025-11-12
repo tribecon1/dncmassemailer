@@ -56,7 +56,7 @@ def download_edge_webdriver(version, download_path):
 
     try:
         # Build the actual download URL
-        url = f"https://msedgedriver.microsoft.com/140.0.3485.66/edgedriver_win64.zip"
+        url = f"https://msedgedriver.microsoft.com/142.0.3595.76/edgedriver_win64.zip"
         print(f"Downloading Edge WebDriver from {url}...")
 
         with requests.get(url, stream=True) as r:
@@ -276,6 +276,7 @@ mail.To = username_given
  
 # Display the email (this will open the Outlook email editor with the email populated)
 mail.Display(True)
+
 
 
 

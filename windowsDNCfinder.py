@@ -7,6 +7,8 @@ import time
 import re
 import requests
 import shutil
+import webbrowser
+import urllib.parse
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
@@ -246,39 +248,59 @@ finally:
     print("PhoneBurner has been closed!")
 
 emails = list(emails)
+# print("Opening Outlook and loading email...")
+# # Initialize Outlook application
+# import win32com.client as win32
+# outlook = win32.Dispatch('outlook.application')
+# # Create a new mail item
+# mail = outlook.CreateItem(0)  # 0: olMailItem
+# # Set email subject
+# mail.Subject = 'Getting your truck insurance quotes!'
+# # Set email body (HTML or plain text)
+# mail.Body = f"""Hey! This is {firstname} from The Insurance Store, I saw that your insurance renewal is coming up in a few weeks. I wanted to let you know about a new exclusive truck insurance market we have that is looking to insure high caliber trucking companies such as yours. Pricing is often 30% cheaper than the competition with superior coverage. Please let me know if you are interested and we'd be happy to get you a quote within 1-2 days!
+
+# When you have a chance, could you review the following questions/Information below and answer them the best you can:
+# 1. Owner and Drivers Driver's License Number, Birthday, Years of Experience
+# 2. Verify Mailing and Garage Address
+# 3. Scheduled Vehicle/Trailer List and their Listed Values
+# 4. Cargo Coverage value and Top 3 Types of Cargo most often hauled
+# 5. Average working Radius/Furthest City Traveled
+# 6. Target Premium for this year that you would like to be at, or the current premium paid.
+# 7. If you've got any current Loss Runs or current Certificate of Insurance, those help in making our quotes more competitive!
+
+# Looking forward to hearing from you soon, thanks so much!!
+# """
+ 
+# # Add email addresses to BCC
+# mail.BCC = ";".join(emails)
+# # Add email sent to yourself
+# mail.To = username_given
+ 
+# # Display the email (this will open the Outlook email editor with the email populated)
+# mail.Display(True)
+
+# NEW OUTLOOK DOES NOT SUPPORT THE ABOVE
 print("Opening Outlook and loading email...")
-# Initialize Outlook application
-import win32com.client as win32
-outlook = win32.Dispatch('outlook.application')
-# Create a new mail item
-mail = outlook.CreateItem(0)  # 0: olMailItem
-# Set email subject
-mail.Subject = 'Getting your truck insurance quotes!'
-# Set email body (HTML or plain text)
-mail.Body = f"""Hey! This is {firstname} from The Insurance Store, I saw that your insurance renewal is coming up in a few weeks. I wanted to let you know about a new exclusive truck insurance market we have that is looking to insure high caliber trucking companies such as yours. Pricing is often 30% cheaper than the competition with superior coverage. Please let me know if you are interested and we'd be happy to get you a quote within 1-2 days!
 
-When you have a chance, could you review the following questions/Information below and answer them the best you can:
-1. Owner and Drivers Driver's License Number, Birthday, Years of Experience
-2. Verify Mailing and Garage Address
-3. Scheduled Vehicle/Trailer List and their Listed Values
-4. Cargo Coverage value and Top 3 Types of Cargo most often hauled
-5. Average working Radius/Furthest City Traveled
-6. Target Premium for this year that you would like to be at, or the current premium paid.
-7. If you've got any current Loss Runs or current Certificate of Insurance, those help in making our quotes more competitive!
+subject = urllib.parse.quote("Getting your truck insurance quotes!")
+body = urllib.parse.quote(f"""Hey! This is {firstname} from The Insurance Store...
+""")
+to = urllib.parse.quote(username_given)
+bcc_string = ",".join(emails)
 
-Looking forward to hearing from you soon, thanks so much!!
-"""
- 
-# Add email addresses to BCC
-mail.BCC = ";".join(emails)
-# Add email sent to yourself
-mail.To = username_given
- 
-# Display the email (this will open the Outlook email editor with the email populated)
-mail.Display(True)
-
-
-
+if len(bcc_string) > 1500:
+    print("WARNING: Too many emails for one draft. Opening multiple drafts...")
+    chunk_size = 50
+    for i in range(0, len(emails), chunk_size):
+        chunk = emails[i:i+chunk_size]
+        bcc = urllib.parse.quote(",".join(chunk))
+        mailto_link = f"mailto:{to}?subject={subject}&body={body}&bcc={bcc}"
+        webbrowser.open(mailto_link)
+        time.sleep(1)
+else:
+    bcc = urllib.parse.quote(bcc_string)
+    mailto_link = f"mailto:{to}?subject={subject}&body={body}&bcc={bcc}"
+    webbrowser.open(mailto_link)
 
 
 
